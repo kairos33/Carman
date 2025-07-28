@@ -9,7 +9,7 @@ df = pd.read_csv('data.csv')
 df_comma = df.style.format(thousands=',')
 # pd.to_datetime(df['DATE'])
 
-st.dataframe(df, column_config={
+st.dataframe(df.iloc[-5:], hide_index=True, column_config={
     'DATE':st.column_config.DateColumn('주유일자'),
     'DISTANCE':st.column_config.NumberColumn('누적거리',format='localized'),
     'COST':st.column_config.NumberColumn('주유금액',format='localized'),
