@@ -5,7 +5,7 @@ import pandas as pd
 
 st.set_page_config(page_title='차계부', page_icon='🏗️', layout='wide')
 
-df = pd.read_csv('data.csv')
+df = pd.read_csv('data.csv', encoding=utf-8)
 df_comma = df.style.format(thousands=',')
 # pd.to_datetime(df['DATE'])
 
