@@ -42,10 +42,10 @@ if menu == '입력':
 elif menu == '조회':
     st.dataframe(df, hide_index=True, column_config={
         'DATE':st.column_config.DateColumn('주유일자'),
-        'DISTANCE':st.column_config.NumberColumn('누적거리(km)',format='localized'),
-        'COST':st.column_config.NumberColumn('주유금액(원)',format='localized'),
-        'PRICE':st.column_config.NumberColumn('단가(원)',format='localized'),
-        'LITER':st.column_config.NumberColumn('주유량(L)',format='%.2f'),
+        'DISTANCE':st.column_config.NumberColumn('누적거리',format='localized'),
+        'COST':st.column_config.NumberColumn('주유금액',format='localized'),
+        'PRICE':st.column_config.NumberColumn('단가',format='localized'),
+        'LITER':st.column_config.NumberColumn('주유량',format='%.2f'),
         'COM':st.column_config.Column('정유사'),
         })
 
