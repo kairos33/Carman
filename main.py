@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title='차계부', page_icon='🏗️', layout='wide')
+st.set_page_config(page_title='차계부', page_icon='🚗', layout='wide')
 
 df = pd.read_csv('data.csv', encoding='utf-8')
 
@@ -60,7 +60,7 @@ elif menu == '분석':
     st.write(f'이동비용 : {TOT_COST / TOT_DISTANCE:,.1f} 원/km')
     st.write('정유사별 주유금액')
     st.dataframe(df.groupby('COM')[['LITER','COST']].sum(), column_config={
-        'COM':st.column_config.Column('정유사', width='medium'),
+        'COM':st.column_config.Column('정유사', width='small'),
         'LITER':st.column_config.NumberColumn('주유량(L)', width='small', format='%.2f'),
         'COST':st.column_config.NumberColumn('주유금액(원)', width='small', format='localized'),
         })
