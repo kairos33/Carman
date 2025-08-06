@@ -20,24 +20,45 @@ if menu == '입력':
         liter = st.number_input('주유량', value=cost/price, format='%0.2f' )
     com = st.selectbox('정유사', ['S-OIL', 'GS칼텍스', 'SK', '오일뱅크', 'NH농협', '알뜰'])
 
+    if "confirm_delete" not in st.session_state:
+        st.session_state.confirm_delete = False
+
     def save_data():
         li = [date, distance, cost, price, liter, com]
         df.loc[len(df)] = li
         df.to_csv('data.csv', index=False)
         df.to_csv('data_bak.csv', index=False)
+        st.success("데이터가 저장되었습니다.")
 
     def del_data():
-        # li = [date, distance, cost, price, liter, com]
-        # df.loc[len(df)] = li
-        df.drop([len(df)-1], axis=0, inplace=True)
-        df.to_csv('data.csv', index=False)
+        if len(df) > 0:
+            df.drop([len(df)-1], axis=0, inplace=True)
+            df.to_csv('data.csv', index=False)
+            st.error("마지막 데이터가 삭제되었습니다.")
+        else:
+            st.warning("삭제할 데이터가 없습니다.")
 
+    # 저장/삭제 버튼 UI
     save, erase = st.columns(2, gap='medium')
 
     with save:
         st.button('저장', type='primary', use_container_width=True, on_click=save_data)
+
     with erase:
-        st.button('삭제', use_container_width=True, on_click=del_data)
+        if not st.session_state.confirm_delete:
+            if st.button('삭제', use_container_width=True):
+                st.session_state.confirm_delete = True
+        else:
+            st.warning("정말 마지막 데이터를 삭제하시겠습니까?")
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button('✅ 예, 삭제합니다', use_container_width=True):
+                    del_data()
+                    st.session_state.confirm_delete = False
+            with col2:
+                if st.button('❌ 취소', use_container_width=True):
+                    st.info("삭제가 취소되었습니다.")
+                    st.session_state.confirm_delete = False
 
 elif menu == '조회':
     st.dataframe(df, hide_index=True, column_config={
