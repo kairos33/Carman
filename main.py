@@ -9,9 +9,9 @@ menu = st.pills('차계부 메뉴선택',['입력','조회','분석'], default='
 
 if menu == '입력':
     date = st.date_input('주유일자', value='today')
-    distance = st.number_input('누적운행거리', min_value=df.iloc[-1,1])
-    price = st.number_input('단가', value=None )
-    cost = st.number_input('주유금액', value=30000, step=5000 )
+    distance = st.number_input('누적운행거리', value=df.iloc[-1,1]+200)
+    price = st.number_input('단가', value=df.iloc[-1,3])
+    cost = st.number_input('주유금액', value=30000, step=5000)
     try:
         value=cost/price
     except:
