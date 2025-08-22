@@ -5,7 +5,27 @@ st.set_page_config(page_title='차계부', page_icon='🚗', layout='wide')
 
 df = pd.read_csv('data.csv', encoding='utf-8')
 
-menu = st.pills('차계부 메뉴선택',['입력','조회','분석'], default='입력')
+menu = st.pills('차계부 메뉴선택',['입력','조회,편집','분석'], default='입력')
+
+def save_data():
+    li = [date, distance, cost, price, liter, com]
+    df.loc[len(df)] = li
+    df.to_csv('data.csv', index=False)
+    df.to_csv('data_bak.csv', index=False)
+    st.success("데이터가 저장되었습니다.")
+
+def save_edited_data():
+    df.to_csv('data.csv', index=False)
+    df.to_csv('data_bak.csv', index=False)
+    st.success("데이터가 저장되었습니다.")
+
+def del_data():
+    if len(df) > 0:
+        df.drop([len(df)-1], axis=0, inplace=True)
+        df.to_csv('data.csv', index=False)
+        st.error("마지막 데이터가 삭제되었습니다.")
+    else:
+        st.warning("삭제할 데이터가 없습니다.")
 
 if menu == '입력':
     date = st.date_input('주유일자', value='today')
@@ -22,21 +42,6 @@ if menu == '입력':
 
     if "confirm_delete" not in st.session_state:
         st.session_state.confirm_delete = False
-
-    def save_data():
-        li = [date, distance, cost, price, liter, com]
-        df.loc[len(df)] = li
-        df.to_csv('data.csv', index=False)
-        df.to_csv('data_bak.csv', index=False)
-        st.success("데이터가 저장되었습니다.")
-
-    def del_data():
-        if len(df) > 0:
-            df.drop([len(df)-1], axis=0, inplace=True)
-            df.to_csv('data.csv', index=False)
-            st.error("마지막 데이터가 삭제되었습니다.")
-        else:
-            st.warning("삭제할 데이터가 없습니다.")
 
     # 저장/삭제 버튼 UI
     save, erase = st.columns(2, gap='medium')
@@ -60,15 +65,16 @@ if menu == '입력':
                     st.info("삭제가 취소되었습니다.")
                     st.session_state.confirm_delete = False
 
-elif menu == '조회':
-    st.dataframe(df, hide_index=True, column_config={
-        'DATE':st.column_config.DateColumn('주유일자'),
+elif menu == '조회,편집':
+    df = st.data_editor(df, hide_index=True, column_config={
+        'DATE':'주유일자',
         'DISTANCE':st.column_config.NumberColumn('누적거리',format='localized'),
         'COST':st.column_config.NumberColumn('주유금액',format='localized'),
         'PRICE':st.column_config.NumberColumn('단가',format='localized'),
         'LITER':st.column_config.NumberColumn('주유량',format='%.2f'),
-        'COM':st.column_config.Column('정유사'),
+        'COM':'정유사',
         })
+    st.button('저장', type='primary', use_container_width=True, on_click=save_edited_data)
 
 elif menu == '분석':
     TOT_DISTANCE = df.iloc[-1,1]
